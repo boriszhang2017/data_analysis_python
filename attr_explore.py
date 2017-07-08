@@ -78,8 +78,8 @@ def numvar_analysis(data, indattr, targetattr, filepath, trunflag):
 
     # anova test
     anova_results = anova_lm(ols(indattr + '~' + targetattr, validAttr).fit())
-    print 'anova test for ' + indattr + '~' + targetattr + ':'
-    print anova_results
+    # print 'anova test for ' + indattr + '~' + targetattr + ':'
+    # print anova_results
 
 
 def catvar_analysis(data, indattr, targetattr, filepath, trunflag):
