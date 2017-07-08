@@ -7,6 +7,7 @@ Predict customer churn using GBDT, with a training parameters procedure.
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from sklearn import cross_validation, ensemble, metrics
 from sklearn.model_selection import train_test_split
@@ -31,16 +32,16 @@ if __name__ == "__main__":
 
     gbm0 = GradientBoostingClassifier(random_state=9)
     # gbm0 = LogisticRegression()
-    gbm0.fit(x_train, y_train)
-    y_pred = gbm0.predict(x_test)
-    y_predprod = gbm0.predict_proba(x_test)[:, 1]
-    print "Accuracy : %.4g" % metrics.accuracy_score(y_test, y_pred)
-    print "AUC Score (Testing Dataset): %f" % metrics.roc_auc_score(y_test, y_predprod)
-
-    y_pred2 = gbm0.predict(x_train)
-    y_predprod2 = gbm0.predict_proba(x_train)[:, 1]
-    print "Accuracy : %.4g" % metrics.accuracy_score(y_train, y_pred2)
-    print "AUC Score (Training Dataset): %f" % metrics.roc_auc_score(y_train, y_predprod2)
+    # gbm0.fit(x_train, y_train)
+    # y_pred = gbm0.predict(x_test)
+    # y_predprod = gbm0.predict_proba(x_test)[:, 1]
+    # print "Accuracy : %.4g" % metrics.accuracy_score(y_test, y_pred)
+    # print "AUC Score (Testing Dataset): %f" % metrics.roc_auc_score(y_test, y_predprod)
+    #
+    # y_pred2 = gbm0.predict(x_train)
+    # y_predprod2 = gbm0.predict_proba(x_train)[:, 1]
+    # print "Accuracy : %.4g" % metrics.accuracy_score(y_train, y_pred2)
+    # print "AUC Score (Training Dataset): %f" % metrics.roc_auc_score(y_train, y_predprod2)
 
     # tunning the number of estimators
     param_test1 = {'n_estimators': range(20,81,10)}
@@ -64,4 +65,20 @@ if __name__ == "__main__":
     features_sorted = np.argsort(-importances)
     # print features_sorted
     import_features = [allFeatures[i] for i in features_sorted]
-    print import_features
+    import_features_value = [importances[i] for i in features_sorted]
+    # print import_features
+
+    # draw by bar
+    var = pd.DataFrame({'FE': import_features, 'VAL': import_features_value})
+    pcnt90 = np.percentile(import_features_value, 90)
+    var1 = var.loc[(var['VAL']>pcnt90)]
+    var2 = var1.set_index(['FE'])
+    print var2
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax1.set_xlabel('Attributes')
+    ax1.set_ylabel('importance')
+    ax1.set_title('the top 10% most important features')
+    var2.plot(kind='bar', )
+    plt.show()

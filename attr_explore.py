@@ -81,6 +81,20 @@ def numvar_analysis(data, indattr, targetattr, filepath, trunflag):
     # print 'anova test for ' + indattr + '~' + targetattr + ':'
     # print anova_results
 
+    # analysis of covariance
+    sampleDf = data.sample(n=15, axis=1)
+    corrCols = sampleDf.columns.str
+    print corrCols
+    exit()
+
+    col_to_index = {data[i]: 'var' + str(i) for i in range(len(data))}
+    # sample from the list of columns,
+    # since too many columns cannot be displayed in the single plot
+    for col in corrCols:
+        sampleDf.rename(columns={col: col_to_index[col]}, inplace=True)
+    print sampleDf
+    scatter_matrix(sampleDf, alpha=0.2, figsize=(6, 6), diagonal='kde')
+
 
 def catvar_analysis(data, indattr, targetattr, filepath, trunflag):
     '''
@@ -172,13 +186,13 @@ if __name__ == "__main__":
 
     # analyze the distribution for every numerical attribute by churn/un-churn
     churnflag = 'CHURN_CUST_IND'
-    # filepath = path + 'num_picts/trunc/'
-    # for attr in numAttrs:
-    #     numvar_analysis(allData, attr, churnflag, filepath, True)
+    filepath = path + 'num_picts/trunc/'
+    for attr in numAttrs:
+        numvar_analysis(allData, attr, churnflag, filepath, True)
 
-    filepath = path + 'cat_picts/'
-    for attr in catAttrs:
-        catvar_analysis(allData, attr, churnflag, filepath, False)
+    # filepath = path + 'cat_picts/'
+    # for attr in catAttrs:
+    #     catvar_analysis(allData, attr, churnflag, filepath, False)
 
 
     # exit()
